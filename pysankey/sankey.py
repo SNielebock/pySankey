@@ -19,7 +19,7 @@ Produces simple Sankey Diagrams with matplotlib.
 from collections import defaultdict
 
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -97,7 +97,7 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
     if len(rightWeight) == 0:
         rightWeight = leftWeight
 
-    plt.figure()
+    fig = plt.figure()
     plt.rc('text', usetex=False)
     plt.rc('font', family='serif')
 
@@ -261,6 +261,7 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
     plt.gca().axis('off')
     plt.gcf().set_size_inches(6, 6)
     if figureName != None:
-        plt.savefig("{}.png".format(figureName), bbox_inches='tight', dpi=150)
+        plt.savefig("{}.pdf".format(figureName), bbox_inches='tight', dpi=150)
     if closePlot:
         plt.close()
+
