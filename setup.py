@@ -9,14 +9,14 @@ require= [x.strip() for x in require]
 
 setuptools.setup(
     name="pySankey",
-    version="1.0.1",
-    author="anazalea",
-    author_email="anneyagolob@gmail.com",
+    version="1.1.0",
+    author="SNielebock",
+    author_email="26896686+SNielebock@users.noreply.github.com",
     description="Make simple, pretty Sankey Diagrams",
     long_description=long_description,
     license='GNU General Public License v3.0',
     long_description_content_type="text/markdown",
-    url="https://github.com/anazalea/pySankey",
+    url="https://github.com/SNielebock/pySankey",
     packages=setuptools.find_packages(),
     install_requires=require,
     classifiers=(
