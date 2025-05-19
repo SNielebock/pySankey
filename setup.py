@@ -9,7 +9,7 @@ require= [x.strip() for x in require]
 
 setuptools.setup(
     name="pySankey",
-    version="1.0.0",
+    version="1.0.1",
     author="anazalea",
     author_email="anneyagolob@gmail.com",
     description="Make simple, pretty Sankey Diagrams",

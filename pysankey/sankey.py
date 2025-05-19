@@ -56,8 +56,8 @@ def check_data_matches_labels(labels, data, side):
 
 
 def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
-           leftLabels=None, rightLabels=None, aspect=4, rightColor=False,
-           fontsize=14, figureName=None, closePlot=False):
+           edgeColor=None, leftLabels=None, rightLabels=None, aspect=4,
+           rightColor=False, fontsize=14, figureName=None, closePlot=False):
     '''
     Make Sankey Diagram showing flow from left-->right
 
@@ -72,6 +72,8 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
             is assigned
         colorDict = Dictionary of colors to use for each label
             {'label':'color'}
+        edgeColor = Color for all edges as string or Dictionary of edgecolors to
+            use for each label {'label':'color'}
         leftLabels = order of the left labels in the diagram
         rightLabels = order of the right labels in the diagram
         aspect = vertical extent of the diagram in units of horizontal extent
@@ -124,6 +126,7 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
         rightLabels = pd.Series(dataFrame.right.unique()).unique()
     else:
         check_data_matches_labels(leftLabels, dataFrame['right'], 'right')
+
     # If no colorDict given, make one
     if colorDict is None:
         colorDict = {}
@@ -135,6 +138,22 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
         missing = [label for label in allLabels if label not in colorDict.keys()]
         if missing:
             msg = "The colorDict parameter is missing values for the following labels : "
+            msg += '{}'.format(', '.join(missing))
+            raise ValueError(msg)
+
+    # If no edge_color_dict is given, create a default one
+    if edgeColor is None:
+        edge_color_dict = colorDict
+    # is color description
+    elif isinstance(edgeColor, str):
+        edge_color_dict = {}
+        for i, label in enumerate(allLabels):
+            edge_color_dict[label] = edgeColor
+    else:
+        edge_color_dict = edgeColor
+        missing = [label for label in allLabels if label not in edge_color_dict.keys()]
+        if missing:
+            msg = "The edge_color_dict parameter is missing values for the following labels : "
             msg += '{}'.format(', '.join(missing))
             raise ValueError(msg)
 
@@ -188,7 +207,8 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
             2 * [leftWidths[leftLabel]['bottom']],
             2 * [leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
             color=colorDict[leftLabel],
-            alpha=0.99
+            alpha=0.99,
+            edgecolor=edge_color_dict[leftLabel]
         )
         plt.text(
             -0.05 * xMax,
@@ -197,12 +217,14 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
             {'ha': 'right', 'va': 'center'},
             fontsize=fontsize
         )
+
     for rightLabel in rightLabels:
         plt.fill_between(
             [xMax, 1.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
             color=colorDict[rightLabel],
-            alpha=0.99
+            alpha=0.99,
+            edgecolor=edge_color_dict[rightLabel]
         )
         plt.text(
             1.05 * xMax,
@@ -233,7 +255,8 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
                 rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
                 plt.fill_between(
                     np.linspace(0, xMax, len(ys_d)), ys_d, ys_u, alpha=0.65,
-                    color=colorDict[labelColor]
+                    color=colorDict[labelColor],
+                    edgecolor=edge_color_dict[labelColor]
                 )
     plt.gca().axis('off')
     plt.gcf().set_size_inches(6, 6)
