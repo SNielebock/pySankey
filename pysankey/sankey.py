@@ -57,7 +57,7 @@ def check_data_matches_labels(labels, data, side):
 
 def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
            edgeColor=None, leftLabels=None, rightLabels=None, aspect=4,
-           rightColor=False, fontsize=14, figureName=None, closePlot=False):
+           rightColor=False, fontsize=14, figureName=None, closePlot=False, format='pdf'):
     '''
     Make Sankey Diagram showing flow from left-->right
 
@@ -261,7 +261,7 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
     plt.gca().axis('off')
     plt.gcf().set_size_inches(6, 6)
     if figureName != None:
-        plt.savefig("{}.pdf".format(figureName), bbox_inches='tight', dpi=150)
+        plt.savefig("{}".format(figureName), format=format, bbox_inches='tight', dpi=150)
     if closePlot:
         plt.close()
 
